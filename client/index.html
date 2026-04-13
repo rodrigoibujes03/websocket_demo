@@ -1,55 +1,234 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
- <meta charset="UTF-8">
- <title>WebSocket Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Professional Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-connect { background: var(--primary); color: white; flex: 2; }
+        .btn-connect:hover { background: var(--primary-hover); }
+
+        .btn-disconnect { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); flex: 1; }
+        .btn-disconnect:hover { background: #fee2e2; color: var(--danger); }
+
+        .btn-send { background: var(--success); color: white; }
+        .btn-send:hover { opacity: 0.9; }
+
+        #chat {
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .log-entry {
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: white;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stats span { color: var(--primary); font-size: 16px; }
+
+        .message-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .message-input-group input { flex: 1; }
+    </style>
 </head>
 <body>
- <h2>WebSocket Chat</h2>
- <input id="url" type="text"
- value="wss://websocket-server-rodrigo03-dev.apps.rm1.0a51.p1.openshiftapps.com"
- size="60">
- <button onclick="connect()">Conectar</button>
- <button onclick="disconnect()">Desconectar</button>
- <br><br>
- <input id="message" type="text" placeholder="Escribe un mensaje">
- <button onclick="sendMessage()">Enviar</button>
- <h3>Mensajes:</h3>
- <div id="chat" style="border:1px solid black; height:200px;
-overflow:auto;"></div>
- <p>Enviados: <span id="sent">0</span></p>
- <p>Recibidos: <span id="received">0</span></p>
- <script>
- let socket;
- let sent = 0;
- let received = 0;
- function connect() {
- const url = document.getElementById("url").value;
- socket = new WebSocket(url);
- socket.onopen = () => { log("Conectado al servidor"); };
- socket.onmessage = (event) => {
- received++;
- document.getElementById("received").innerText = received;
- log("Recibido: " + event.data);
- };
- socket.onclose = () => { log("Desconectado"); };
- }
- function disconnect() { socket.close(); }
- function sendMessage() {
- if (!socket || socket.readyState !== WebSocket.OPEN) {
- alert("No estás conectado");
- return;
- }
- const msg = document.getElementById("message").value;
- socket.send(msg);
- sent++;document.getElementById("sent").innerText = sent;
- log("Enviado: " + msg);
- }
- function log(message) {
- const chat = document.getElementById("chat");
- chat.innerHTML += message + "<br>";
- chat.scrollTop = chat.scrollHeight;
- }
- </script>
+
+<div class="container">
+    <h2>⚡ WebSocket Terminal</h2>
+    
+    <div class="config-section">
+        <label style="font-size: 12px; color: var(--text-muted);">SERVER URL</label>
+        <input id="url" type="text" value="wss://websocket-server-rodrigo03-dev.apps.rm1.0a51.p1.openshiftapps.com">
+        <div class="button-group">
+            <button class="btn-connect" onclick="connect()">Conectar</button>
+            <button class="btn-disconnect" onclick="disconnect()">Desconectar</button>
+        </div>
+    </div>
+
+    <div id="chat">
+        <div style="color: var(--text-muted); text-align: center; font-style: italic;">Esperando conexión...</div>
+    </div>
+
+    <div class="message-input-group">
+        <input id="message" type="text" placeholder="Escribe un mensaje para enviar...">
+        <button class="btn-send" onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <div class="stats">
+        <p>Enviados: <span id="sent">0</span></p>
+        <p>Recibidos: <span id="received">0</span></p>
+    </div>
+</div>
+
+<script>
+    let socket;
+    let sent = 0;
+    let received = 0;
+
+    function connect() {
+        const url = document.getElementById("url").value;
+        socket = new WebSocket(url);
+
+        socket.onopen = () => { 
+            log("✅ Conectado al servidor", "success"); 
+        };
+
+        socket.onmessage = (event) => {
+            received++;
+            document.getElementById("received").innerText = received;
+            log("📩 Recibido: " + event.data);
+        };
+
+        socket.onclose = () => { 
+            log("❌ Desconectado del servidor", "danger"); 
+        };
+
+        socket.onerror = (error) => {
+            log("⚠️ Error en la conexión", "danger");
+        };
+    }
+
+    function disconnect() { 
+        if(socket) socket.close(); 
+    }
+
+    function sendMessage() {
+        const input = document.getElementById("message");
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            alert("No estás conectado");
+            return;
+        }
+        const msg = input.value;
+        if(!msg) return;
+
+        socket.send(msg);
+        sent++;
+        document.getElementById("sent").innerText = sent;
+        log("📤 Enviado: " + msg);
+        input.value = ""; // Limpiar input después de enviar
+    }
+
+    function log(message, type) {
+        const chat = document.getElementById("chat");
+        const div = document.createElement("div");
+        div.className = "log-entry";
+        if(type === "success") div.style.borderLeftColor = "var(--success)";
+        if(type === "danger") div.style.borderLeftColor = "var(--danger)";
+        
+        div.innerText = message;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Permitir enviar con la tecla Enter
+    document.getElementById("message").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") sendMessage();
+    });
+</script>
+
 </body>
 </html>
