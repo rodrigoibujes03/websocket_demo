@@ -16,60 +16,6 @@
       overflow: hidden;
     }
 
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-    .modal {
-      background: white;
-      border-radius: 16px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-    }
-    .modal h3 {
-      font-size: 17px;
-      color: #1F3864;
-      margin-bottom: 8px;
-    }
-    .modal p {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 18px;
-    }
-    .modal input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid #ddd;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-      margin-bottom: 12px;
-      transition: border-color 0.2s;
-    }
-    .modal input:focus { border-color: #1F3864; }
-    .modal button {
-      width: 100%;
-      padding: 13px;
-      background: #1F3864;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .modal button:hover { background: #16305a; }
-
     /* HEADER */
     .header {
       background: #1F3864;
@@ -103,8 +49,78 @@
       padding: 4px 10px;
       border-radius: 20px;
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #aaa; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #aaa; transition: background 0.3s; }
     .dot.online { background: #2ECC71; }
+
+    /* PANEL DE CONEXIÓN */
+    .connection-panel {
+      background: white;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .connection-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .connection-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      white-space: nowrap;
+    }
+    .connection-row input[type="text"] {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: monospace;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #f8f8f8;
+      color: #333;
+    }
+    .connection-row input[type="text"]:focus { border-color: #1F3864; background: white; }
+    .connection-row input[type="text"]:disabled { color: #888; background: #f0f0f0; cursor: not-allowed; }
+
+    .btn-connect {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn-connect.connect { background: #1F3864; color: white; }
+    .btn-connect.connect:hover { background: #16305a; }
+    .btn-connect.disconnect { background: #e74c3c; color: white; }
+    .btn-connect.disconnect:hover { background: #c0392b; }
+    .btn-connect:active { transform: scale(0.96); }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .name-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #f8f8f8;
+    }
+    .name-row input:focus { border-color: #1F3864; background: white; }
+    .name-row input:disabled { color: #888; background: #f0f0f0; cursor: not-allowed; }
 
     /* MENSAJES */
     .messages {
@@ -154,23 +170,11 @@
       border-radius: 16px 16px 4px 16px;
     }
 
-    .username {
-      font-size: 11px;
-      font-weight: 700;
-      color: #1F3864;
-      margin-bottom: 2px;
-    }
+    .username { font-size: 11px; font-weight: 700; color: #1F3864; margin-bottom: 2px; }
     .bubble.mine .username { color: rgba(255,255,255,0.65); }
-
     .text { font-size: 14px; color: #1a1a1a; line-height: 1.4; }
     .bubble.mine .text { color: white; }
-
-    .time {
-      font-size: 10px;
-      color: #aaa;
-      margin-top: 3px;
-      text-align: right;
-    }
+    .time { font-size: 10px; color: #aaa; margin-top: 3px; text-align: right; }
     .bubble.mine .time { color: rgba(255,255,255,0.5); }
 
     /* SISTEMA */
@@ -204,20 +208,15 @@
       background: #f8f8f8;
       transition: border-color 0.2s;
     }
-    .input-area input:focus {
-      border-color: #1F3864;
-      background: white;
-    }
+    .input-area input:focus { border-color: #1F3864; background: white; }
+    .input-area input:disabled { background: #f0f0f0; cursor: not-allowed; }
     .send-btn {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       border-radius: 50%;
       background: #1F3864;
       border: none;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       transition: background 0.2s, transform 0.1s;
     }
@@ -229,28 +228,36 @@
 </head>
 <body>
 
-  <!-- MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h3>Bienvenido al Chat</h3>
-      <p>¿Con qué nombre quieres aparecer?</p>
-      <input type="text" id="usernameInput" placeholder="Tu nombre..." maxlength="20" />
-      <button onclick="entrarAlChat()">Entrar al chat</button>
-    </div>
-  </div>
-
   <!-- HEADER -->
   <div class="header">
     <div class="header-left">
       <div class="header-avatar" id="headerAvatar">WS</div>
       <div class="header-info">
         <h2>Chat en vivo</h2>
-        <p id="headerNombre">Conectando...</p>
+        <p id="headerNombre">Sin conectar</p>
       </div>
     </div>
     <div class="status-badge">
       <div class="dot" id="statusDot"></div>
       <span id="statusText">Offline</span>
+    </div>
+  </div>
+
+  <!-- PANEL DE CONEXIÓN -->
+  <div class="connection-panel">
+    <!-- URL del socket -->
+    <div class="connection-row">
+      <span class="connection-label">🔌 Socket:</span>
+      <input type="text" id="wsUrl"
+        value="wss://websocket-server-rodrigo03-dev.apps.rm1.0a51.p1.openshiftapps.com"
+        placeholder="wss://tu-servidor..." />
+      <button class="btn-connect connect" id="btnConectar" onclick="conectar()">Conectar</button>
+      <button class="btn-connect disconnect" id="btnDesconectar" onclick="desconectar()" style="display:none;">Desconectar</button>
+    </div>
+    <!-- Nombre de usuario -->
+    <div class="name-row">
+      <span class="connection-label">👤 Nombre:</span>
+      <input type="text" id="usernameInput" placeholder="Tu nombre..." maxlength="20" />
     </div>
   </div>
 
@@ -266,7 +273,6 @@
   </div>
 
   <script>
-    const WS_URL = 'wss://websocket-server-rodrigo03-dev.apps.rm1.0a51.p1.openshiftapps.com';
     let socket;
     let miNombre = '';
 
@@ -278,26 +284,42 @@
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    function entrarAlChat() {
-      const input = document.getElementById('usernameInput');
-      const nombre = input.value.trim();
-      if (!nombre) { input.focus(); return; }
+    function conectar() {
+      const url = document.getElementById('wsUrl').value.trim();
+      const nombre = document.getElementById('usernameInput').value.trim();
+
+      if (!url) {
+        alert('Por favor ingresa la URL del servidor WebSocket.');
+        document.getElementById('wsUrl').focus();
+        return;
+      }
+      if (!nombre) {
+        alert('Por favor ingresa tu nombre antes de conectarte.');
+        document.getElementById('usernameInput').focus();
+        return;
+      }
+
       miNombre = nombre;
-      document.getElementById('modalOverlay').style.display = 'none';
       document.getElementById('headerAvatar').textContent = iniciales(nombre);
       document.getElementById('headerNombre').textContent = nombre;
-      conectar();
-    }
 
-    function conectar() {
-      socket = new WebSocket(WS_URL);
+      // Deshabilitar controles durante conexión
+      document.getElementById('wsUrl').disabled = true;
+      document.getElementById('usernameInput').disabled = true;
+      document.getElementById('btnConectar').disabled = true;
+      mensajeSistema('Conectando a ' + url + '...');
+
+      socket = new WebSocket(url);
 
       socket.onopen = () => {
         document.getElementById('statusDot').classList.add('online');
         document.getElementById('statusText').textContent = 'Online';
         document.getElementById('messageInput').disabled = false;
         document.getElementById('sendBtn').disabled = false;
-        mensajeSistema('Entraste como ' + miNombre);
+        document.getElementById('btnConectar').style.display = 'none';
+        document.getElementById('btnDesconectar').style.display = 'inline-flex';
+        document.getElementById('btnConectar').disabled = false;
+        mensajeSistema('✅ Conectado como ' + miNombre);
         socket.send(JSON.stringify({ tipo: 'nombre', nombre: miNombre }));
       };
 
@@ -313,13 +335,37 @@
         } catch(e) {}
       };
 
-      socket.onclose = () => {
-        document.getElementById('statusDot').classList.remove('online');
-        document.getElementById('statusText').textContent = 'Offline';
-        document.getElementById('messageInput').disabled = true;
-        document.getElementById('sendBtn').disabled = true;
-        mensajeSistema('Desconectado del servidor');
+      socket.onclose = (e) => {
+        setDesconectado();
+        if (e.wasClean) {
+          mensajeSistema('🔴 Desconectado del servidor.');
+        } else {
+          mensajeSistema('⚠️ Conexión perdida. Puedes volver a conectarte.');
+        }
       };
+
+      socket.onerror = () => {
+        mensajeSistema('❌ Error al conectar. Verifica la URL e inténtalo de nuevo.');
+        setDesconectado();
+      };
+    }
+
+    function desconectar() {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close(1000, 'Usuario se desconectó');
+      }
+    }
+
+    function setDesconectado() {
+      document.getElementById('statusDot').classList.remove('online');
+      document.getElementById('statusText').textContent = 'Offline';
+      document.getElementById('messageInput').disabled = true;
+      document.getElementById('sendBtn').disabled = true;
+      document.getElementById('wsUrl').disabled = false;
+      document.getElementById('usernameInput').disabled = false;
+      document.getElementById('btnConectar').style.display = 'inline-flex';
+      document.getElementById('btnDesconectar').style.display = 'none';
+      document.getElementById('headerNombre').textContent = 'Sin conectar';
     }
 
     function enviar() {
@@ -358,10 +404,6 @@
       msgs.appendChild(div);
       msgs.scrollTop = msgs.scrollHeight;
     }
-
-    document.getElementById('usernameInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') entrarAlChat();
-    });
   </script>
 </body>
 </html>
