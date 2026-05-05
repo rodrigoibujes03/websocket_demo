@@ -1,43 +1,52 @@
 const http = require('http');
 const WebSocket = require('ws');
 const PORT = 8080;
-// Servidor HTTP (para health check)
+
 const server = http.createServer((req, res) => {
- if (req.url === '/health') {
- res.writeHead(200, { 'Content-Type': 'application/json' });
- res.end(JSON.stringify({ status: 'ok', connections: wss.clients.size }));
- } else {
- res.writeHead(200);
- res.end('WebSocket server running');
- }
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', connections: wss.clients.size }));
+  } else {
+    res.writeHead(200);
+    res.end('WebSocket server running');
+  }
 });
-// Servidor WebSocket
+
 const wss = new WebSocket.Server({ server });
-let clientId = 0;
+
 wss.on('connection', (ws) => {
- clientId++;
- ws.id = clientId;
- console.log(`Cliente ${ws.id} conectado`);
- ws.send(JSON.stringify({ type: 'welcome', message: `Hola cliente ${ws.id}` }));
- ws.on('message', (message) => {
- console.log(`Mensaje de ${ws.id}: ${message}`);
- wss.clients.forEach(client => {
- if (client.readyState === WebSocket.OPEN) {
- client.send(JSON.stringify({ type: 'message', from: ws.id, text:
-message.toString() }));
- }
- });
- });
- ws.on('close', () => {
- console.log(`Cliente ${ws.id} desconectado`);
- wss.clients.forEach(client => {
- if (client.readyState === WebSocket.OPEN) {
- client.send(JSON.stringify({ type: 'info', message: `Cliente ${ws.id} se
-desconectó` }));
- }
- });
- });
+  ws.nombre = 'Anónimo';
+
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message.toString());
+
+      if (data.tipo === 'nombre') {
+        ws.nombre = data.nombre;
+        // Avisar a todos que alguien entró
+        broadcast({ tipo: 'sistema', texto: data.nombre + ' se unió al chat' });
+
+      } else if (data.tipo === 'chat') {
+        // Reenviar el mensaje a todos
+        broadcast({ tipo: 'chat', nombre: data.nombre, texto: data.texto });
+      }
+    } catch(e) {}
+  });
+
+  ws.on('close', () => {
+    broadcast({ tipo: 'sistema', texto: ws.nombre + ' salió del chat' });
+  });
 });
+
+function broadcast(obj) {
+  const msg = JSON.stringify(obj);
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
+    }
+  });
+}
+
 server.listen(PORT, () => {
- console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
